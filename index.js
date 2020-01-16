@@ -1,44 +1,81 @@
 const fs = require("fs");
 const axios = require("axios");
 const inquirer = require("inquirer");
-const htmlConvert = require("electron-html-to");
+// const HTMLToPDF = require('convert-html-to-pdf');
+ 
 
-// const htmlFile = require("./index.html");
+// HELP: Practice converting html to pdf - error: "HTMLToPDF is not a constructor"
+// const htmlToPDF = new HTMLToPDF(`
+//   <div>Hello world</div>
+// `);
 
-
-// var conversion = htmlConvert({
-//     converterPath: htmlConvert.converters.PDF
+// htmlToPDF.convert()
+//   .then((buffer) => {
+//     // do something with the PDF file buffer
+//   })
+//   .catch((err) => {
+//     // do something on error
 //   });
-   
-//   conversion({ html: htmlFile }, function(err, result) {
-//     if (err) {
-//       return console.error(err);
-//     }
-//   });
 
 
+
+
+// Prompt user's GitHub username and store name, location, reops, etc., and then append these results to the html file
 inquirer
   .prompt({
     message: "Enter your GitHub username:",
     name: "username"
   })
   .then(function({ username }) {
-    const queryUrl = `https://api.github.com/users/${username}/repos?per_page=100`;
+    const queryUrl = `https://api.github.com/users/${username}`;
 
     axios.get(queryUrl).then(function(res) {
     console.log(res.data);
-      const repoNames = res.data.map(function(repo) {
-        return repo.name;
-      });
 
-      const repoNamesStr = repoNames.join("\n");
+      const userName = `<h1>` + res.data.name + `</h1>`;
+      const userBio = `<p>` + res.data.bio + `</p>`;
 
-      fs.writeFile("repos.txt", repoNamesStr, function(err) {
+      fs.appendFile("index.html", userName,  function(err) {
         if (err) {
           throw err;
         }
 
-        console.log(`Saved ${repoNames.length} repos`);
+        console.log(`Saved name to html file!`);
+      });
+
+      fs.appendFile("index.html", userBio,  function(err) {
+        if (err) {
+          throw err;
+        }
+
+        console.log(`Saved bio to html file!`);
       });
     });
   });
+
+  
+// Example logging repos from activity 33
+// inquirer
+//   .prompt({
+//     message: "Enter your GitHub username:",
+//     name: "username"
+//   })
+//   .then(function({ username }) {
+//     const queryUrl = `https://api.github.com/users/${username}/repos?per_page=100`;
+
+//     axios.get(queryUrl).then(function(res) {
+//     // console.log(res.data);
+//       const repoNames = res.data.map(function(repo) {
+//         return repo.name;
+//       });
+//       const repoNamesStr = repoNames.join("\n");
+
+//       fs.writeFile("repos.html", repoNamesStr, function(err) {
+//         if (err) {
+//           throw err;
+//         }
+
+//         console.log(`Saved ${repoNames.length} repos`);
+//       });
+//     });
+//   });

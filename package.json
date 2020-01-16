@@ -19,7 +19,7 @@
   "homepage": "https://github.com/mijimenez/bootcamp_developer_profile_generator#readme",
   "dependencies": {
     "axios": "^0.19.1",
-    "electron-html-to": "^2.6.0",
+    "convert-html-to-pdf": "^1.0.1",
     "fs": "0.0.1-security",
     "inquirer": "^7.0.3"
   }
