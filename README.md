@@ -2,6 +2,12 @@
 
 This is a command-line application that dynamically generates a PDF profile from a GitHub username.
 
+## Demo of Application
+
+![Demo](./assets/img/developer_profile_demo.gif)
+
+## Instructions
+
 Initialize with required npm packages using this command:
 
 ```sh
