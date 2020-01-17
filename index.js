@@ -23,53 +23,54 @@ const inquirer = require("inquirer");
 
 // Prompt user's GitHub username and store name, location, reops, etc., and then append these results to the html file
 inquirer
-  .prompt({
+  .prompt([
+    {
+    type: "input",
     message: "Enter your GitHub username:",
     name: "username"
-  })
-  .then(function({ username }) {
+    }, 
+    {
+    type: "input",
+    message: "Enter a color for your profile:",
+    name: "color"
+    }
+  ])
+  .then(function({ username, color}) {
     const queryUrl = `https://api.github.com/users/${username}`;
 
     axios.get(queryUrl).then(function(res) {
     console.log(res.data);
 
       // Save specific user data
-      const userName = `<h1>` + res.data.name + `</h1>`;
-      const userBio = `<p>` + res.data.bio + `</p>`;
+      const userPic = res.data.avatar_url;
+      const userName = res.data.name;
+      const userBio = res.data.bio;
+      const userCompany = res.data.company;
+      const userLocation = res.data.location;
+      const userGitHub = res.data.html_url;
+      const userBlog = res.data.blog;
+      const userRepos = res.data.public_repos;
+      const userFollowers = res.data.followers;
+      const userFollowing = res.data.following;
 
-      // fs.appendFile("index.html", userName,  function(err) {
-      //   if (err) {
-      //     throw err;
-      //   }
 
-      //   console.log(`Saved name to html file!`);
-      // });
-
-      // // Append all user data to html page
-      // fs.appendFile("index.html", userBio,  function(err) {
-      //   if (err) {
-      //     throw err;
-      //   }
-
-      //   console.log(`Saved bio to html file!`);
-      // });
-
-      fs.readFile('./test.html', 'utf8', function (err,data) {
+      // Append interpolated body with GitHub user data content to html file using "Regex"
+      fs.readFile('./template.html', 'utf8', function (err,data) {
         if (err) {
           return console.log(err);
         }
-        var toPrepand = `
+        const toPrepand = `
         <main>
-        <div class="hero">
-            <img id="profileImg" src="#">
+        <div class="hero" style="background-color: ${color}">
+            <img id="profileImg" src="${userPic}">
             <h1>Hi!</h1>
             <h1>My name is <span id="userName">${userName}</span></h1>
-            <h2>Currently @ <span id="companyName">[Company Name]</span></h2>
+            <h2>Currently @ <span id="companyName">${userCompany}</span></h2>
             <div class="info-links">
                 <ul>
-                    <li id="location"><a href="#" id="locationLink">[City, State]</a></li>
-                    <li id="gitHubProfile"><a href="#" id="gitHubProfileLink">GitHub</a></li>
-                    <li id="blog"><a href="#" id="blogLink">Blog</a></li>
+                    <li id="location"><a href="#" target="_blank" id="locationLink">${userLocation}</a></li>
+                    <li id="gitHubProfile"><a href="${userGitHub}" target="_blank" id="gitHubProfileLink">GitHub</a></li>
+                    <li id="blog"><a href="${userBlog}" target="_blank" id="blogLink">Blog</a></li>
                 </ul>
             </div>
         </div>
@@ -78,11 +79,11 @@ inquirer
             <div class="stats">
                 <div class="repos">
                     <h4>Public Repositories</h4>
-                    <p id="reposNum">##</p>
+                    <p id="reposNum">${userRepos}</p>
                 </div>
                 <div class="followers">
                     <h4>Followers</h4>
-                    <p id="followersNum">##</p>
+                    <p id="followersNum">${userFollowers}</p>
                 </div>
                 <div class="stars">
                     <h4>GitHub Stars</h4>
@@ -90,7 +91,7 @@ inquirer
                 </div>
                 <div class="following">
                     <h4>Following</h4>
-                    <p id="followingNum">##</p>
+                    <p id="followingNum">${userFollowing}</p>
                 </div>
             </div>
         </div>
@@ -111,30 +112,3 @@ inquirer
 
     });
   });
-
-  
-// Example logging repos from activity 33
-// inquirer
-//   .prompt({
-//     message: "Enter your GitHub username:",
-//     name: "username"
-//   })
-//   .then(function({ username }) {
-//     const queryUrl = `https://api.github.com/users/${username}/repos?per_page=100`;
-
-//     axios.get(queryUrl).then(function(res) {
-//     // console.log(res.data);
-//       const repoNames = res.data.map(function(repo) {
-//         return repo.name;
-//       });
-//       const repoNamesStr = repoNames.join("\n");
-
-//       fs.writeFile("repos.html", repoNamesStr, function(err) {
-//         if (err) {
-//           throw err;
-//         }
-
-//         console.log(`Saved ${repoNames.length} repos`);
-//       });
-//     });
-//   });

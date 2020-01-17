@@ -19,7 +19,6 @@
   "homepage": "https://github.com/mijimenez/bootcamp_developer_profile_generator#readme",
   "dependencies": {
     "axios": "^0.19.1",
-    "cheerio": "^1.0.0-rc.3",
     "convert-html-to-pdf": "^1.0.1",
     "fs": "0.0.1-security",
     "inquirer": "^7.0.3"
