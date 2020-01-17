@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Developer Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/7b4d2fea99.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f9f9f9;
+        }
+        .hero {
+            z-index: -1;
+        }
+        .hero img {
+            width: 25%;
+        }
+        h1 {
+          color: ${userColor};
+        }
+        .about{
+            height: 1em;
+            margin-top: -60px!important;
+        }
+        .info-links ul {
+            list-style-type: none;
+            color: ${userColor};
+        }
+        .stats div {
+            width: 45%;
+            margin-bottom: 2em;
+            padding: 1em;
+            background-color: ${userColor};
+        }
+        .stat {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <main class="text-center">
+    <div class="hero card text-white">
+        <img id="profileImg" src="${userPic}" class="mx-auto my-5">
+        <h1>My name is <span id="userName">${userName}</span></h1>
+        <h5>Currently @ <span id="companyName">${userCompany}</span></h5>
+        <div class="info-links mt-3 mb-5">
+            <ul class="p-0 d-flex justify-content-around w-50 mx-auto">
+                <li id="location"><a href="https://www.google.com/maps/place/${userLocation}" target="_blank" id="locationLink">${userLocation}</a></li>
+                <li id="gitHubProfile"><a href="${userGitHub}" target="_blank" id="gitHubProfileLink">GitHub</a></li>
+                <li id="blog"><a href="${userBlog}" target="_blank" id="blogLink">Blog</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="about my-5">
+        <h5 id="userBio" class="mb-5 p-3 card bg-white mx-auto my-4 w-75">${userBio}</h5>
+        <div class="stats d-flex justify-content-around flex-wrap text-white">
+            <div class="repos card">
+                <h3>Public Repositories</h3>
+                <h5 id="reposNum" class="stat">${userRepos}</h5>
+            </div>
+            <div class="followers card">
+                <h3>Followers</h3>
+                <h5 id="followersNum" class="stat">${userFollowers}</h5>
+            </div>
+            <div class="stars card">
+                <h3>GitHub Stars</h3>
+                <h5 id="starsNum" class="stat">${userStars}</h5>
+            </div>
+            <div class="following card">
+                <h3>Following</h3>
+                <h5 id="followingNum" class="stat">${userFollowing}</h5>
+            </div>
+        </div>
+    </div>
+    </main>
+</body>
+</html>
