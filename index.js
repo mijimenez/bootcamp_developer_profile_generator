@@ -5,6 +5,7 @@ const inquirer = require("inquirer");
 const puppeteer = require("puppeteer");
 
 const writeFileAsync = util.promisify(fs.writeFile);
+const readFileAsync = util.promisify(fs.readFile);
 
 // Prompt user's GitHub username and store name, location, reops, etc.,
 function promptUser() {
@@ -47,7 +48,7 @@ function createHTMLFile(inputData, gitHubData, gitHubStarsData) {
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Developer Profile</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://kit.fontawesome.com/7b4d2fea99.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             * {
                 box-sizing: border-box;
@@ -109,9 +110,9 @@ function createHTMLFile(inputData, gitHubData, gitHubStarsData) {
             <h5 class="text-white">Currently @ <span id="companyName class="company">${userCompany}</span></h5>
             <div class="info-links mt-3">
                 <ul class="p-0 d-flex justify-content-around w-50 mx-auto">
-                    <li id="location"><a href="https://www.google.com/maps/place/${userLocation}" target="_blank" id="locationLink">${userLocation}</a></li>
-                    <li id="gitHubProfile"><a href="${userGitHub}" target="_blank" id="gitHubProfileLink">GitHub</a></li>
-                    <li id="blog"><a href="${userBlog}" target="_blank" id="blogLink">Blog</a></li>
+                    <li id="location"><a href="https://www.google.com/maps/place/${userLocation}" target="_blank" id="locationLink"><i style="font-size:24px" class="fa mr-1">&#xf124;</i>${userLocation}</a></li>
+                    <li id="gitHubProfile"><a href="${userGitHub}" target="_blank" id="gitHubProfileLink"><i style="font-size:24px" class="fa mr-1">&#xf09b;</i>GitHub</a></li>
+                    <li id="blog"><a href="${userBlog}" target="_blank" id="blogLink"><i style="font-size:24px" class="fa mr-1">&#xf0c6;</i>Blog</a></li>
                 </ul>
             </div>
         </div>
@@ -142,6 +143,11 @@ function createHTMLFile(inputData, gitHubData, gitHubStarsData) {
     `;
 };
 
+// Function that creates 3 sec timeout to delay conversion to PDF so font-awesome library has time to load
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Once all data comes back from prompts and axios requests, write the html file with all gathered data and then convert into a PDF.
 (async function() {
     try {
@@ -150,23 +156,30 @@ function createHTMLFile(inputData, gitHubData, gitHubStarsData) {
       const gitHubData = await axios.get(
         `https://api.github.com/users/${userUserName}`
       );
-    //   console.log(gitHubData.data);
       const gitHubStarsData = await axios.get(
         `https://api.github.com/users/${userUserName}/starred`
       );
-    //   console.log(gitHubStarsData.data);
+
+      // Store template literal HTML
       const html = createHTMLFile(inputData, gitHubData, gitHubStarsData);
   
-      // Write the html into a html file with a unique name from the username
+      // Write this html into an actual html file with a unique name from the username - this way the generated PDF will register libraries like fonts and icons properly!
       await writeFileAsync(`developer_profile_${userUserName}.html`, html);
       console.log(`Generated profile_${userUserName}.html`);
+      console.log(`Please wait 3 seconds for PDF conversion...`);
+
+      // Read generated HTML file and store data
+      const generatedHTML = await readFileAsync(`developer_profile_${userUserName}.html`, "utf8");
   
-      // Convert the html file into a pdf with a unique name from the username
+      // Once puppeteer is up and running, convert actual HTML file into a pdf with the unique name from the username
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
   
-      await page.setContent(html);
+      await page.setContent(generatedHTML);
       await page.emulateMediaFeatures("screen");
+
+      await timeout(3000);
+
       await page.pdf({
         path: `developer_profile_${userUserName}.pdf`,
         format: "A4",

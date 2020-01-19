@@ -59,3 +59,6 @@ WHEN prompted for the developer's GitHub username and favorite color
 
 THEN a PDF profile is generated
 ```
+
+- - -
+© 2019 [Madeline Jimenez](https://github.com/mijimenez)
