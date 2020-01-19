@@ -4,7 +4,7 @@ This is a command-line application that dynamically generates a PDF profile from
 
 ## Demo of Application
 
-![Demo](./assets/img/developer_profile_demo.gif)
+![Demo](./assets/img/developer_profile_demo_lowres.gif)
 
 ## Instructions
 
